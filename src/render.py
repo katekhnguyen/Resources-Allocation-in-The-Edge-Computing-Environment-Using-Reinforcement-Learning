@@ -1,7 +1,8 @@
 from tkinter import *
 import random
 import numpy as np
-import math
+
+LOCATION = "KAIST"
 
 def dispatch_color(edge_color , E):
     for egde_id in range(len(E)):
@@ -26,9 +27,9 @@ def get_info(U, MAX_EP_STEPS):
     return x_min, x_Max, y_min, y_Max
 
 #####################  hyper parameters  ####################
-MAX_SCREEN_SIZE = 1000
-EDGE_SIZE = 20
-USER_SIZE = 10
+MAX_SCREEN_SIZE = 400
+EDGE_SIZE = 15
+USER_SIZE = 5
 
 #####################  User  ####################
 class oval_User:
@@ -73,8 +74,9 @@ class Demo:
         self.tk.title("Simulation: Resource Allocation in Egde Computing Environment")
         self.tk.resizable(0, 0)
         self.tk.wm_attributes("-topmost", 1)
-        self.canvas = Canvas(self.tk, width=MAX_SCREEN_SIZE, height=1000, bd=0, highlightthickness=0, bg='black')
-        self.canvas.pack()
+        self.canvas = Canvas(self.tk, width=MAX_SCREEN_SIZE, height=400, bd=0, highlightthickness=0, bg='black')
+        self.canvas.grid(row=0, column=0)
+        #self.canvas.pack()
         self.tk.update()
         x_range = self.x_Max - self.x_min
         y_range = self.y_Max - self.y_min
@@ -151,5 +153,3 @@ class EdgeServer():
     def __init__(self, edge_id, loc):
         self.edge_id = edge_id  # edge server number
         self.loc = loc
-
-

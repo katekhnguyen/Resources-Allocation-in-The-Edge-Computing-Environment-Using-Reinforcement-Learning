@@ -12,7 +12,7 @@ MAX_EP_STEPS = 3000
 TEXT_RENDER = True
 SCREEN_RENDER = True
 CHANGE = False
-SLEEP_TIME = 0.1
+SLEEP_TIME = 0
 
 #####################  function  ####################
 def exploration (a, r_dim, b_dim, r_var, b_var):
@@ -41,6 +41,21 @@ if __name__ == "__main__":
     episode = 0
     var_counter = 0
     epoch_inf = []
+
+    fig = plt.figure(1, figsize=(15, 5))
+    a = fig.subplots(2, 2)
+    a1 ,a2, a3, a4 = a[0, 0],a[0, 1],a[1, 0],a[1, 1]
+    
+    r_plot = a1.plot([],[], 'r')
+    a1.set_title('Reward')
+    a1.set_xlabel('Episode')
+    a1.set_ylabel('Reward')
+
+    rv_plot, bv_plot = a2.plot([],[],[], 'b')
+    a2.set_title('Variance')
+    a2.set_xlabel('Episode')
+    a2.set_ylabel('Variance')
+
     while var_counter < LEARNING_MAX_EPISODE:
         # initialize
         s = env.reset()
@@ -84,6 +99,17 @@ if __name__ == "__main__":
                 print('Episode:%3d' % episode, ' Reward: %5d' % ep_reward[episode], '###  r_var: %.2f ' % r_var,'b_var: %.2f ' % b_var, )
                 string = 'Episode:%3d' % episode + ' Reward: %5d' % ep_reward[episode] + '###  r_var: %.2f ' % r_var + 'b_var: %.2f ' % b_var
                 epoch_inf.append(string)
+
+                r_plot.set_xdata([i+1 for i in range(episode+1)])
+                r_plot.set_ydata(var_reward)
+                
+                rv_plot.set_xdata([i+1 for i in range(episode+1)])
+                rv_plot.set_ydata(r_v)
+
+                bv_plot.set_xdata([i+1 for i in range(episode+1)])
+                bv_plot.set_ydata(b_v)
+                plt.draw()
+
                 # variation change
                 if var_counter >= CHECK_EPISODE and np.mean(var_reward[-CHECK_EPISODE:]) >= max_rewards:
                     CHANGE = True
@@ -134,6 +160,6 @@ if __name__ == "__main__":
     f.write("the standard deviation of the rewards:" + str(np.std(ep_reward[-LEARNING_MAX_EPISODE:])) + '\n\n')
     # range
     print("the range of the rewards:", str(max(ep_reward[-LEARNING_MAX_EPISODE:]) - min(ep_reward[-LEARNING_MAX_EPISODE:])))
-    f.write("the range of the rewards:" + str(max(ep_reward[-LEARNING_MAX_EPISODE:]) - min(ep_reward[-LEARNING_MAX_EPISODE:])) + '\n\n')
+    f.write("the range of the rewards:" + str(max(ep_reward[-LEARNING_MAX_EPISODE:]) - min(ep_reward[-LEARNING_MAX_EPISODE:])) + '\n\n')    
     f.close()
 
