@@ -1,18 +1,21 @@
 from env import Env
 from DDPG import DDPG
 import numpy as np
+import matplotlib
+matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
 import os
 import time
-
+import warnings
+warnings.simplefilter("ignore", UserWarning)
 #####################  hyper parameters  ####################
 CHECK_EPISODE = 4
 LEARNING_MAX_EPISODE = 10
 MAX_EP_STEPS = 3000
-TEXT_RENDER = True
+TEXT_RENDER = False
 SCREEN_RENDER = True
 CHANGE = False
-SLEEP_TIME = 0
+SLEEP_TIME = 0.001
 
 #####################  function  ####################
 def exploration (a, r_dim, b_dim, r_var, b_var):
@@ -42,19 +45,23 @@ if __name__ == "__main__":
     var_counter = 0
     epoch_inf = []
 
-    fig = plt.figure(1, figsize=(15, 5))
-    a = fig.subplots(2, 2)
-    a1 ,a2, a3, a4 = a[0, 0],a[0, 1],a[1, 0],a[1, 1]
-    
-    r_plot = a1.plot([],[], 'r')
-    a1.set_title('Reward')
-    a1.set_xlabel('Episode')
-    a1.set_ylabel('Reward')
+    ''' Modified: Plot Reward & Varience / Episode '''
+    fig, (ax1, ax2) = plt.subplots(nrows=1, ncols=2,
+                            figsize=(8,4))
+    plt.subplots_adjust(bottom=0.2, wspace=0.5)
 
-    rv_plot, bv_plot = a2.plot([],[],[], 'b')
-    a2.set_title('Variance')
-    a2.set_xlabel('Episode')
-    a2.set_ylabel('Variance')
+    r_plot, = ax1.plot([],[])
+    ax1.set_title('Reward')
+    ax1.set_xlabel('Episode')
+    ax1.set_ylabel('Reward')
+
+    rv_plot, bv_plot, = ax2.plot([],[],[])
+    ax2.set_title('Variance')
+    ax2.set_xlabel('Episode')
+    ax2.set_ylabel('Variance')
+
+    plt.show(block=False)
+    '''end'''
 
     while var_counter < LEARNING_MAX_EPISODE:
         # initialize
@@ -100,6 +107,7 @@ if __name__ == "__main__":
                 string = 'Episode:%3d' % episode + ' Reward: %5d' % ep_reward[episode] + '###  r_var: %.2f ' % r_var + 'b_var: %.2f ' % b_var
                 epoch_inf.append(string)
 
+                ''' Modified: Plot Reward & Varience / Episode '''
                 r_plot.set_xdata([i+1 for i in range(episode+1)])
                 r_plot.set_ydata(var_reward)
                 
@@ -108,7 +116,13 @@ if __name__ == "__main__":
 
                 bv_plot.set_xdata([i+1 for i in range(episode+1)])
                 bv_plot.set_ydata(b_v)
+
+                ax1.relim()
+                ax2.relim()
+                ax1.autoscale_view()
+                ax2.autoscale_view()
                 plt.draw()
+                '''end'''
 
                 # variation change
                 if var_counter >= CHECK_EPISODE and np.mean(var_reward[-CHECK_EPISODE:]) >= max_rewards:
