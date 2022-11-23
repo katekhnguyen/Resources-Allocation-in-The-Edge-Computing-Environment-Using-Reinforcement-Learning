@@ -4,14 +4,12 @@ import numpy as np
 import matplotlib
 matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
-import os
 import time
-import warnings
-warnings.simplefilter("ignore", UserWarning)
+
 #####################  hyper parameters  ####################
 CHECK_EPISODE = 4
 LEARNING_MAX_EPISODE = 10
-MAX_EP_STEPS = 3000
+MAX_EP_STEPS = 10
 TEXT_RENDER = False
 SCREEN_RENDER = True
 CHANGE = False
@@ -46,6 +44,7 @@ if __name__ == "__main__":
     epoch_inf = []
 
     ''' Modified: Plot Reward & Varience / Episode '''
+    '''
     fig, (ax1, ax2) = plt.subplots(nrows=1, ncols=2,
                             figsize=(8,4))
     plt.subplots_adjust(bottom=0.2, wspace=0.5)
@@ -60,7 +59,7 @@ if __name__ == "__main__":
     ax2.set_xlabel('Episode')
     ax2.set_ylabel('Variance')
 
-    plt.show(block=False)
+    plt.show(block=False)'''
     '''end'''
 
     while var_counter < LEARNING_MAX_EPISODE:
@@ -108,6 +107,7 @@ if __name__ == "__main__":
                 epoch_inf.append(string)
 
                 ''' Modified: Plot Reward & Varience / Episode '''
+                '''
                 r_plot.set_xdata([i+1 for i in range(episode+1)])
                 r_plot.set_ydata(var_reward)
                 
@@ -122,6 +122,7 @@ if __name__ == "__main__":
                 ax1.autoscale_view()
                 ax2.autoscale_view()
                 plt.draw()
+                '''
                 '''end'''
 
                 # variation change
